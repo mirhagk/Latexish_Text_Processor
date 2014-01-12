@@ -10,69 +10,98 @@ namespace Latexish_Text_Processor
 {
     class Parser
     {
-        public class Token
+        public abstract class Token
         {
-            public int Location { get; set; }
-            /// <summary>
-            /// The length of the token as it appears in the source text.
-            /// </summary>
-            /// <remarks>
-            /// This is not neccessarily the same as Text.Length, since Text isn't what appeared in the source, 
-            /// but rather the Text that represents the token.
-            /// For instance for whitespace it's a single whitespace token
-            /// </remarks>
-            public int Length { get; set; }
-            public int Line { get; set; }
-            public string Text { get; set; }
-            public TokenType Type { get; set; }
+            public int Location = -1;
+            public int Length = 0;
+            public int Line = -1;
         }
-        public class TokenType
+        public class TextToken : Token
         {
-            public Regex Matching { get; set; }
-            public string Name { get; set; }
-            private TokenType(string regex)
-            {
-                Matching = new Regex(@"\G" + regex, RegexOptions.Compiled | RegexOptions.Singleline);
-            }
-            public static readonly TokenType Text = new TokenType(@"([^\\{}]+)");
-            //public static readonly TokenType Whitespace = new TokenType(@"(\s)\s*");
-            public static readonly TokenType Command = new TokenType(@"\\([^ \s{]+)");
-            public static readonly TokenType ParamStart = new TokenType(@"{");
-            public static readonly TokenType ParamEnd = new TokenType(@"}");
-            public static readonly TokenType EOF = new TokenType("$");
-            public static List<TokenType> TokenTypes = new List<TokenType>();
-            static TokenType()
-            {
-                foreach(var field in typeof(TokenType).GetFields(BindingFlags.Static | BindingFlags.Public))
-                {
-                    var tokenType = field.GetValue(null) as TokenType;
-                    if (tokenType == null)
-                        continue;
-                    tokenType.Name = field.Name;
-                    TokenTypes.Add(tokenType);
-                }
-            }
+            public string Text = "";
+        }
+        public class CommandToken : Token
+        {
+            public string Command = "";
+            public List<string> Parameters = new List<string>();
         }
         private IEnumerable<Token> GetTokens(string input)
         {
+            Token token = null;
+            var currentLine =1;
+            int nestedDepth = 0;
             for (int i = 0; i < input.Length; i++)
             {
-                foreach (var tokenType in TokenType.TokenTypes)
+                if (i > 0 && input[i - 1] == '\n')
+                    currentLine++;
+                if (token == null || token is TextToken)
                 {
-                    var match = tokenType.Matching.Match(input, i);
-                    if (match.Success)
+                    var textToken = token as TextToken;
+                    if (textToken == null)
                     {
-                        var token = new Token();
-                        token.Text = match.Groups[1].Value;
+                        token = textToken = new TextToken() { Location = i, Line = currentLine };
+                    }
+                    if (input[i] != '\\')
+                    {
+                        textToken.Text += input[i];
+                        textToken.Length++;
+                    }
+                    else
+                    {
+                        if (textToken.Length != 0)
+                            yield return textToken;
+                        token = new CommandToken();
                         token.Location = i;
-                        token.Length = match.Length;
-                        token.Type = tokenType;
-                        //TODO: count the line numbers somehow
-                        yield return token;
-                        i += match.Length - 1;
-                        break;
+                        token.Line = currentLine;
+                        token.Length=1;
                     }
                 }
+                else if (token is CommandToken)
+                {
+                    var commandToken = token as CommandToken;
+                    if (commandToken.Parameters.Count == 0)
+                    {
+                        if (commandToken.Length > 1 && Regex.IsMatch(input[i].ToString(), "\\s"))
+                        {
+                            yield return commandToken;
+                            token = null;
+                        }
+                        else if (commandToken.Length > 1 && input[i] == '{')
+                            commandToken.Parameters.Add("");
+                        else
+                            commandToken.Command += input[i];
+                    }
+                    else
+                    {
+                        if (input[i]=='{'&&input[i-1]!='\\')
+                            nestedDepth++;
+                        if (input[i] == '}' && input[i - 1] != '\\')
+                        {
+                            if (nestedDepth == 0)
+                            {
+                                if (GetNextNonWhitespace(input, i) == '{')
+                                {
+                                    commandToken.Parameters.Add("");
+                                    //skip through and consume that { that was found
+                                    for (; input[i] != '{'; i++) { }
+                                }
+                                else
+                                {
+                                    yield return commandToken;
+                                    token = null;
+                                }
+                                commandToken.Length++;
+                                continue;
+                            }
+                            else
+                                nestedDepth--;
+                        }
+                        commandToken.Parameters[commandToken.Parameters.Count - 1] += input[i];
+                    }
+                    commandToken.Length++;
+                }
+                else
+                    throw new FormatException("Unrecognized token");
             }
             yield break;
         }
@@ -80,24 +109,15 @@ namespace Latexish_Text_Processor
         {
             return GetTokens(input);
         }
-        private string ProcessTokens(IEnumerable<Token> tokens)
+        private char? GetNextNonWhitespace(string input, int position)
         {
-            Stack<Token> tokenStack = new Stack<Token>();
-            string result="";
-            foreach (var token in tokens)
+            for (int i = position + 1; i < input.Length; i++)
             {
-                if (token.Type == TokenType.Text)
-                    result += token.Text;
-                else if (token.Type == TokenType.Command)
-                    tokenStack.Push(token);
-                else if (token.Type == TokenType.ParamStart)
-                    tokenStack.Push(token);
-
+                if (Regex.IsMatch(input[i].ToString(), "\\s"))
+                    continue;
+                return input[i];
             }
-        }
-        public string Parse(string input)
-        {
-            return ProcessTokens(Tokenizer(input));
+            return null;
         }
     }
 }

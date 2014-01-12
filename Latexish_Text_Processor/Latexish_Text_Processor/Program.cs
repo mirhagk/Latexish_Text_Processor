@@ -11,7 +11,7 @@ namespace Latexish_Text_Processor
         static string test = @"
 THis is a test
 
-calling a \macro
+calling a \macro{with a param}{and some \subcommand{with a param}}
 
 \latexish
 
@@ -21,8 +21,20 @@ calling a \macro
             Parser parser= new Parser();
             foreach (var token in parser.Tokenizer(test))
             {
-                Console.WriteLine(token.Type.Name);
-                Console.WriteLine(token.Text);
+                Console.WriteLine(token.GetType().Name);
+                Console.WriteLine("---");
+                if (token is Parser.TextToken)
+                    Console.WriteLine((token as Parser.TextToken).Text);
+                else if (token is Parser.CommandToken)
+                {
+                    Console.WriteLine((token as Parser.CommandToken).Command);
+                    foreach (var param in (token as Parser.CommandToken).Parameters)
+                    {
+                        Console.WriteLine("Param: {0}", param);
+                    }
+                }
+                Console.WriteLine();
+                
             }
             Console.ReadKey();
         }
