@@ -10,7 +10,7 @@ namespace Latexish_Text_Processor
 {
     class Parser
     {
-        class Token
+        public class Token
         {
             public int Location { get; set; }
             /// <summary>
@@ -26,24 +26,31 @@ namespace Latexish_Text_Processor
             public string Text { get; set; }
             public TokenType Type { get; set; }
         }
-        class TokenType
+        public class TokenType
         {
             public Regex Matching { get; set; }
             public string Name { get; set; }
             private TokenType(string regex)
             {
-                Matching = new Regex("^" + regex, RegexOptions.Compiled | RegexOptions.Singleline);
+                Matching = new Regex(@"\G" + regex, RegexOptions.Compiled | RegexOptions.Singleline);
             }
-            public static readonly TokenType Text = new TokenType(@"([a-zA-Z0-9]+)");
-            public static readonly TokenType Whitespace = new TokenType(@"(\s)\s*");
+            public static readonly TokenType Text = new TokenType(@"([^\\{}]+)");
+            //public static readonly TokenType Whitespace = new TokenType(@"(\s)\s*");
             public static readonly TokenType Command = new TokenType(@"\\([^ \s{]+)");
             public static readonly TokenType ParamStart = new TokenType(@"{");
             public static readonly TokenType ParamEnd = new TokenType(@"}");
             public static readonly TokenType EOF = new TokenType("$");
-            public static List<TokenType> TokenTypes;
+            public static List<TokenType> TokenTypes = new List<TokenType>();
             static TokenType()
             {
-                TokenTypes = typeof(TokenType).GetFields(BindingFlags.Static | BindingFlags.Public).Select((x) => (TokenType)x.GetValue(null)).ToList();
+                foreach(var field in typeof(TokenType).GetFields(BindingFlags.Static | BindingFlags.Public))
+                {
+                    var tokenType = field.GetValue(null) as TokenType;
+                    if (tokenType == null)
+                        continue;
+                    tokenType.Name = field.Name;
+                    TokenTypes.Add(tokenType);
+                }
             }
         }
         private IEnumerable<Token> GetTokens(string input)
@@ -59,22 +66,38 @@ namespace Latexish_Text_Processor
                         token.Text = match.Groups[1].Value;
                         token.Location = i;
                         token.Length = match.Length;
+                        token.Type = tokenType;
                         //TODO: count the line numbers somehow
                         yield return token;
-                        i += match.Length;
+                        i += match.Length - 1;
                         break;
                     }
                 }
             }
             yield break;
         }
-        private bool Filter(Token token)
-        {
-            return !(token is Text && String.IsNullOrEmpty(token.Text));
-        }
         public IEnumerable<Token> Tokenizer(string input)
         {
-            return GetTokens(input).Where((x) => Filter(x));
+            return GetTokens(input);
+        }
+        private string ProcessTokens(IEnumerable<Token> tokens)
+        {
+            Stack<Token> tokenStack = new Stack<Token>();
+            string result="";
+            foreach (var token in tokens)
+            {
+                if (token.Type == TokenType.Text)
+                    result += token.Text;
+                else if (token.Type == TokenType.Command)
+                    tokenStack.Push(token);
+                else if (token.Type == TokenType.ParamStart)
+                    tokenStack.Push(token);
+
+            }
+        }
+        public string Parse(string input)
+        {
+            return ProcessTokens(Tokenizer(input));
         }
     }
 }
