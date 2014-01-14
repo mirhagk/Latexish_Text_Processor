@@ -25,7 +25,7 @@ namespace Latexish_Text_Processor
             public string Command = "";
             public List<string> Parameters = new List<string>();
         }
-        private IEnumerable<Token> GetTokens(string input)
+        private static IEnumerable<Token> GetTokens(string input)
         {
             Token token = null;
             var currentLine =1;
@@ -105,11 +105,15 @@ namespace Latexish_Text_Processor
             }
             yield break;
         }
-        public IEnumerable<Token> Tokenizer(string input)
+        public static IEnumerable<Token> Tokenizer(string input)
         {
             return GetTokens(input);
         }
-        private char? GetNextNonWhitespace(string input, int position)
+        public static string Process(string input)
+        {
+            return string.Join("", GetTokens(input).Select((x) => x as TextToken).Where((x) => x != null).Select((x) => x.Text));
+        }
+        private static char? GetNextNonWhitespace(string input, int position)
         {
             for (int i = position + 1; i < input.Length; i++)
             {

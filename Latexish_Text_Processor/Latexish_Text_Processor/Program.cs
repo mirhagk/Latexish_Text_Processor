@@ -18,8 +18,7 @@ calling a \macro{with a param}{and some \subcommand{with a param}}
 ";
         static void Main(string[] args)
         {
-            Parser parser= new Parser();
-            foreach (var token in parser.Tokenizer(test))
+            foreach (var token in Parser.Tokenizer(test))
             {
                 Console.WriteLine(token.GetType().Name);
                 Console.WriteLine("---");
