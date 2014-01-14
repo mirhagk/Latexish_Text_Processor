@@ -18,7 +18,7 @@ calling a \macro{with a param}{and some \subcommand{with a param}}
 ";
         static string test2 = @"
 Today is \now
-and the time is \now{hh:mm}
+and the time is \now{\timeFormat}
 ";
         static void Main(string[] args)
         {

@@ -31,7 +31,7 @@ namespace Latexish_Text_Processor
         private static void AddSystemMacros()
         {
             var methods = typeof(Command).GetMethods().Where((x) => x.CustomAttributes.Any((y) => y.AttributeType == typeof(MacroAttribute)));
-            macros.AddRange(methods.Select((x) => new Macro { Name = x.Name, LazyParse = true, NumParameters = x.GetParameters().Length, Execute = CreateWrapper(x) }));
+            macros.AddRange(methods.Select((x) => new Macro { Name = x.Name, LazyParse = (x.GetCustomAttribute(typeof(MacroAttribute)) as MacroAttribute).LazyArguments, NumParameters = x.GetParameters().Length, Execute = CreateWrapper(x) }));
         }
         public static List<Macro> macros = new List<Macro>();
         public static string ExecuteCommand(string CommandName, params string[] Parameters)

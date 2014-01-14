@@ -8,6 +8,11 @@ namespace Latexish_Text_Processor
 {
     class MacroAttribute:Attribute
     {
+        public bool LazyArguments;
+        public MacroAttribute(bool LazyArguments=true)
+        {
+            this.LazyArguments = LazyArguments;
+        }
     }
     partial class Command
     {
@@ -16,10 +21,15 @@ namespace Latexish_Text_Processor
         {
             return DateTime.Now.ToString("yyyy-MM-dd");
         }
-        [Macro]
+        [Macro(false)]
         public static string now(string format)
         {
             return DateTime.Now.ToString(format);
+        }
+        [Macro]
+        public static string timeFormat()
+        {
+            return "hh:mm";
         }
     }
 }
