@@ -12,14 +12,14 @@ namespace Latexish_Text_Processor
     partial class Command
     {
         [Macro]
-        public static string Date()
+        public static string now()
         {
-            return DateTime.Today.ToString("yyyy-MM-dd");
+            return DateTime.Now.ToString("yyyy-MM-dd");
         }
         [Macro]
-        public static string Date(string format)
+        public static string now(string format)
         {
-            return DateTime.Today.ToString(format);
+            return DateTime.Now.ToString(format);
         }
     }
 }

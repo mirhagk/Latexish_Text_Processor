@@ -34,7 +34,8 @@ calling a \macro{with a param}{and some \subcommand{with a param}}
                 }
                 Console.WriteLine();
             }
-            Console.WriteLine(Command.ExecuteCommand("Date"));
+            Console.WriteLine(Command.ExecuteCommand("now"));
+            Console.WriteLine(Command.ExecuteCommand("now","yyyy-MM-dd hh:mm"));
             Console.ReadKey();
         }
     }
