@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,12 +13,31 @@ namespace Latexish_Text_Processor
         {
             public string Name { get; set; }
             public bool LazyParse { get; set; }
+            public int NumParameters { get; set; }
             public Func<string[], string> Execute;
+        }
+        static Command()
+        {
+            AddSystemMacros();
+        }
+        private static Func<string[], string> CreateWrapper(MethodInfo method)
+        {
+            return (arguments)=>
+                {
+                    return method.Invoke(null, arguments).ToString();
+                };
+            //method.GetParameters().
+        }
+        private static void AddSystemMacros()
+        {
+            var methods = typeof(Command).GetMethods().Where((x) => x.CustomAttributes.Any((y) => y.AttributeType == typeof(MacroAttribute)));
+            macros.AddRange(methods.Select((x) => new Macro { Name = x.Name, LazyParse = true, NumParameters = x.GetParameters().Length, Execute = CreateWrapper(x) }));
         }
         public static List<Macro> macros = new List<Macro>();
         public static string ExecuteCommand(string CommandName, params string[] Parameters)
         {
-            var macro = macros.FirstOrDefault((x) => x.Name == CommandName);
+            //find macro, with the most number of arguments that satisfy. If one is found with more arguments than given, then use it with blanks for the rest of the arguments
+            var macro = macros.FirstOrDefault((x) => x.Name == CommandName && x.NumParameters == Parameters.Length);
             if (macro == null)//do some stuff to find it among included command engines
                 throw new InvalidOperationException("Macro " + CommandName + " not found");
             if (!macro.LazyParse)
