@@ -16,9 +16,13 @@ calling a \macro{with a param}{and some \subcommand{with a param}}
 \latexish
 
 ";
+        static string test2 = @"
+Today is \now
+and the time is \now{hh:mm}
+";
         static void Main(string[] args)
         {
-            foreach (var token in Parser.Tokenizer(test))
+            /*foreach (var token in Parser.Tokenizer(test))
             {
                 Console.WriteLine(token.GetType().Name);
                 Console.WriteLine("---");
@@ -33,9 +37,8 @@ calling a \macro{with a param}{and some \subcommand{with a param}}
                     }
                 }
                 Console.WriteLine();
-            }
-            Console.WriteLine(Command.ExecuteCommand("now"));
-            Console.WriteLine(Command.ExecuteCommand("now","yyyy-MM-dd hh:mm"));
+            }*/
+            Console.WriteLine(Parser.Process(test2));
             Console.ReadKey();
         }
     }
