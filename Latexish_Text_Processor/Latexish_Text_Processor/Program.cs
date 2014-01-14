@@ -22,22 +22,6 @@ and the time is \now{hh:mm}
 ";
         static void Main(string[] args)
         {
-            /*foreach (var token in Parser.Tokenizer(test))
-            {
-                Console.WriteLine(token.GetType().Name);
-                Console.WriteLine("---");
-                if (token is Parser.TextToken)
-                    Console.WriteLine((token as Parser.TextToken).Text);
-                else if (token is Parser.CommandToken)
-                {
-                    Console.WriteLine((token as Parser.CommandToken).Command);
-                    foreach (var param in (token as Parser.CommandToken).Parameters)
-                    {
-                        Console.WriteLine("Param: {0}", param);
-                    }
-                }
-                Console.WriteLine();
-            }*/
             Console.WriteLine(Parser.Process(test2));
             Console.ReadKey();
         }
