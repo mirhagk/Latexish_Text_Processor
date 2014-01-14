@@ -33,8 +33,8 @@ calling a \macro{with a param}{and some \subcommand{with a param}}
                     }
                 }
                 Console.WriteLine();
-                
             }
+            Console.WriteLine(Command.ExecuteCommand("Date"));
             Console.ReadKey();
         }
     }
