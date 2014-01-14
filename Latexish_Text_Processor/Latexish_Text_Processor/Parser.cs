@@ -103,6 +103,8 @@ namespace Latexish_Text_Processor
                 else
                     throw new FormatException("Unrecognized token");
             }
+            if (token != null)
+                yield return token;
             yield break;
         }
         public static IEnumerable<Token> Tokenizer(string input)
@@ -111,7 +113,18 @@ namespace Latexish_Text_Processor
         }
         public static string Process(string input)
         {
-            return string.Join("", GetTokens(input).Select((x) => x as TextToken).Where((x) => x != null).Select((x) => x.Text));
+            string result="";
+            foreach(var token in GetTokens(input))
+            {
+                if (token is TextToken)
+                    result+=(token as TextToken).Text;
+                else
+                {
+                    var command = token as CommandToken;
+                    result+=Process(Command.ExecuteCommand(command.Command,command.Parameters.ToArray()));
+                }
+            }
+            return result;
         }
         private static char? GetNextNonWhitespace(string input, int position)
         {
