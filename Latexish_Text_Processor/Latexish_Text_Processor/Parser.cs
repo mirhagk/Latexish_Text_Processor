@@ -111,6 +111,10 @@ namespace Latexish_Text_Processor
         {
             return GetTokens(input);
         }
+        public static string FinalClear(string input)
+        {
+            return string.Join("\n", input.Split('\n').Where((x) => x.Trim('\r') != ""));
+        }
         public static string Process(string input)
         {
             string result="";
@@ -124,7 +128,7 @@ namespace Latexish_Text_Processor
                     result+=Process(Command.ExecuteCommand(command.Command,command.Parameters.ToArray()));
                 }
             }
-            return result;
+            return FinalClear(result);
         }
         private static char? GetNextNonWhitespace(string input, int position)
         {
