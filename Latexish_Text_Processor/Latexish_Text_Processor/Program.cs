@@ -33,8 +33,24 @@ and the time is \time
     }
 }
 ";
+        static string Extension = ".txt.";
+        List<string> FilesToProcess = new List<string>();
         static void Main(string[] args)
         {
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i].StartsWith("-"))
+                {
+                    switch (args[i].Substring(1))
+                    {
+                        case "e":
+                            goto case "extension";
+                        case "extension":
+                            Extension = args[i++];
+                            break;
+                    }
+                }
+            }
             //Console.WriteLine(Parser.Process(test2));
             //Console.ReadKey();
             Console.WriteLine(Parser.Process(html));
