@@ -36,7 +36,7 @@ namespace Latexish_Text_Processor
         public static List<Macro> macros = new List<Macro>();
         public static string ExecuteCommand(string CommandName, params string[] Parameters)
         {
-            //find macro, with the most number of arguments that satisfy. If one is found with more arguments than given, then use it with blanks for the rest of the arguments
+            //find macro that matches the number of arguments
             var macro = macros.FirstOrDefault((x) => x.Name == CommandName && x.NumParameters == Parameters.Length);
             if (macro == null)//do some stuff to find it among included command engines
                 throw new InvalidOperationException("Macro " + CommandName + " not found");

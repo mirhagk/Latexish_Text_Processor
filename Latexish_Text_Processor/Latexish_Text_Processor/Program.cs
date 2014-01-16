@@ -17,8 +17,11 @@ calling a \macro{with a param}{and some \subcommand{with a param}}
 
 ";
         static string test2 = @"
+\newCommand{time}{\now{\timeFormat}}
+\newCommand{wrap}{1}{""\arg{1}""}
 Today is \now
-and the time is \now{\timeFormat}
+and the time is \time
+\wrap{Hello world}
 ";
         static void Main(string[] args)
         {
