@@ -43,6 +43,11 @@ namespace Latexish_Text_Processor
                     }
                     if (input[i] == '\\')
                     {
+                        if (i < input.Length + 1 && (input[i+1] == '\n' || input[i+1] == '\r'))
+                        {
+                            i = GetNextNonWhitespace(input, i).Item2 - 1;
+                            continue;
+                        }
                         if (textToken.Length != 0)
                             yield return textToken;
                         token = new CommandToken();
@@ -128,7 +133,7 @@ namespace Latexish_Text_Processor
                         {
                             if (nestedDepth == 0)
                             {
-                                if (GetNextNonWhitespace(input, i) == '{')
+                                if (GetNextNonWhitespace(input, i).Item1 == '{')
                                 {
                                     commandToken.Parameters.Add("");
                                     //skip through and consume that { that was found
@@ -187,15 +192,15 @@ namespace Latexish_Text_Processor
             }
             return result;
         }
-        private static char? GetNextNonWhitespace(string input, int position)
+        private static Tuple<char?,int> GetNextNonWhitespace(string input, int position)
         {
             for (int i = position + 1; i < input.Length; i++)
             {
                 if (Regex.IsMatch(input[i].ToString(), "\\s"))
                     continue;
-                return input[i];
+                return Tuple.Create<char?,int>(input[i], i);
             }
-            return null;
+            return Tuple.Create<char?, int>(null, input.Length);
         }
     }
 }

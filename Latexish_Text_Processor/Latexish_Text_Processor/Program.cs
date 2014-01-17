@@ -27,7 +27,7 @@ and the time is \time
 \newCommand{htmlTag}{2}{<\arg{1}>\arg{2}</\arg{1}>}
 [[[totally ignored\]\]\]
 ]\htmlTag{html}{
-    \htmlTag{head}{}
+    \htmlTag{head}{}\
     \htmlTag{body}{
         \htmlTag{p}{This is a paragraph}
     }
