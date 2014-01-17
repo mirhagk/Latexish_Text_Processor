@@ -90,19 +90,18 @@ namespace Latexish_Text_Processor
                 }
                 else if (token is ExcludeToken || token is IgnoreToken)
                 {
-                    if (input[i] == ']')
+                    if (input[i] == ']'&&input[i-1]!='\\')
                     {
                         if (token is ExcludeToken)
                         {
                             yield return token;
                             token = null;
-                            i++;
                         }
                         else if (i < input.Length - 1 && input[i + 1] == ']')
                         {
                             yield return token;
                             token = null;
-                            i += 2;
+                            i += 1;
                         }
                         else
                             token.Text += input[i];
