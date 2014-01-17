@@ -23,10 +23,10 @@ Today is \now
 and the time is \time
 \wrap{Hello world}
 ";
-        static string html = @"
+        static string html = @"[
 \newCommand{htmlTag}{2}{<\arg{1}>\arg{2}</\arg{1}>}
-
-\htmlTag{html}{
+[[[totally ignored\]\]\]
+]\htmlTag{html}{
     \htmlTag{head}{}
     \htmlTag{body}{
         \htmlTag{p}{This is a paragraph}

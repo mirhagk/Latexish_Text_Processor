@@ -15,16 +15,16 @@ namespace Latexish_Text_Processor
             public int Location = -1;
             public int Length = 0;
             public int Line = -1;
-        }
-        public class TextToken : Token
-        {
             public string Text = "";
         }
+        public class TextToken : Token { }
         public class CommandToken : Token
         {
-            public string Command = "";
             public List<string> Parameters = new List<string>();
         }
+        public class IgnoreToken : Token { }
+        public class ExcludeToken : Token { }
+        public class CommentToken : Token { }
         private static IEnumerable<Token> GetTokens(string input)
         {
             Token token = null;
@@ -41,20 +41,69 @@ namespace Latexish_Text_Processor
                     {
                         token = textToken = new TextToken() { Location = i, Line = currentLine };
                     }
-                    if (input[i] != '\\')
-                    {
-                        textToken.Text += input[i];
-                        textToken.Length++;
-                    }
-                    else
+                    if (input[i] == '\\')
                     {
                         if (textToken.Length != 0)
                             yield return textToken;
                         token = new CommandToken();
                         token.Location = i;
                         token.Line = currentLine;
-                        token.Length=1;
+                        token.Length = 1;
                     }
+                    else if (input[i] == '[')
+                    {
+                        if (textToken.Length != 0)
+                            yield return textToken;
+                        if (i < input.Length - 1 && input[i + 1] == '[')
+                        {
+                            if (i < input.Length - 2 && input[i + 1] == '[')
+                            {
+                                token = new CommentToken();
+                            }
+                            else
+                                token = new IgnoreToken();
+                        }
+                        else
+                            token = new ExcludeToken();
+                        token.Location = i;
+                        token.Line = currentLine;
+                        token.Length = 1;
+                    }
+                    else
+                    {
+                        textToken.Text += input[i];
+                        textToken.Length++;
+                    }
+                }
+                else if (token is CommentToken)
+                {
+                    if (i < input.Length - 2 && input[i] == ']' && input[i + 1] == ']' && input[i+2] == ']')
+                    {
+                        token = null;
+                        i += 2;
+                    }
+                }
+                else if (token is ExcludeToken || token is IgnoreToken)
+                {
+                    if (input[i] == ']')
+                    {
+                        if (token is ExcludeToken)
+                        {
+                            yield return token;
+                            token = null;
+                            i++;
+                        }
+                        else if (i < input.Length - 1 && input[i + 1] == ']')
+                        {
+                            yield return token;
+                            token = null;
+                            i += 2;
+                        }
+                        else
+                            token.Text += input[i];
+                    }
+                    else
+                        token.Text += input[i];
                 }
                 else if (token is CommandToken)
                 {
@@ -69,11 +118,11 @@ namespace Latexish_Text_Processor
                         else if (commandToken.Length > 1 && input[i] == '{')
                             commandToken.Parameters.Add("");
                         else
-                            commandToken.Command += input[i];
+                            commandToken.Text += input[i];
                     }
                     else
                     {
-                        if (input[i]=='{'&&input[i-1]!='\\')
+                        if (input[i] == '{' && input[i - 1] != '\\')
                             nestedDepth++;
                         if (input[i] == '}' && input[i - 1] != '\\')
                         {
@@ -122,13 +171,21 @@ namespace Latexish_Text_Processor
             {
                 if (token is TextToken)
                     result+=(token as TextToken).Text;
-                else
+                else if (token is ExcludeToken)
+                {
+                    Process(token.Text);
+                }
+                else if (token is IgnoreToken)
+                {
+                    result += token.Text;
+                }
+                else if (token is CommandToken)
                 {
                     var command = token as CommandToken;
-                    result+=Process(Command.ExecuteCommand(command.Command,command.Parameters.ToArray()));
+                    result += Process(Command.ExecuteCommand(command.Text, command.Parameters.ToArray()));
                 }
             }
-            return FinalClear(result);
+            return result;
         }
         private static char? GetNextNonWhitespace(string input, int position)
         {
