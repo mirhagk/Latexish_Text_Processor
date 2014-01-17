@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,7 +45,7 @@ and the time is \time
                 }
                 else if (args[i].StartsWith("-"))
                 {
-                    if (i < args.Length - 1)
+                    if (i > args.Length - 2)
                     {
                         Console.Error.WriteLine("No value specified for command line swtich {0}", args[i]);
                         return;
@@ -54,7 +55,7 @@ and the time is \time
                         case "e":
                             goto case "extension";
                         case "extension":
-                            Extension = args[i++];
+                            Extension = args[++i];
                             break;
                         default:
                             Console.Error.WriteLine("Could not understand command line switch {0}", args[i]);
@@ -64,10 +65,16 @@ and the time is \time
                 else
                     FilesToProcess.Add(args[i]);
             }
+            foreach (var file in FilesToProcess)
+            {
+                Console.WriteLine("Processing {0}", file);
+                File.WriteAllText(Path.ChangeExtension(file, Extension), Parser.Process(File.ReadAllText(file)));
+            }
+            Console.WriteLine("done");
             //Console.WriteLine(Parser.Process(test2));
             //Console.ReadKey();
-            Console.WriteLine(Parser.Process(html));
-            Console.ReadKey();
+            //Console.WriteLine(Parser.Process(html));
+            //Console.ReadKey();
         }
     }
 }
