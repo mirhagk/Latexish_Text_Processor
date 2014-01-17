@@ -34,13 +34,21 @@ and the time is \time
 }
 ";
         static string Extension = ".txt.";
-        List<string> FilesToProcess = new List<string>();
+        static List<string> FilesToProcess = new List<string>();
         static void Main(string[] args)
         {
             for (int i = 0; i < args.Length; i++)
             {
-                if (args[i].StartsWith("-"))
+                if (args[i].StartsWith("--"))
                 {
+                }
+                else if (args[i].StartsWith("-"))
+                {
+                    if (i < args.Length - 1)
+                    {
+                        Console.Error.WriteLine("No value specified for command line swtich {0}", args[i]);
+                        return;
+                    }
                     switch (args[i].Substring(1))
                     {
                         case "e":
@@ -48,8 +56,13 @@ and the time is \time
                         case "extension":
                             Extension = args[i++];
                             break;
+                        default:
+                            Console.Error.WriteLine("Could not understand command line switch {0}", args[i]);
+                            return;
                     }
                 }
+                else
+                    FilesToProcess.Add(args[i]);
             }
             //Console.WriteLine(Parser.Process(test2));
             //Console.ReadKey();
