@@ -19,6 +19,7 @@ namespace Latexish_Text_Processor
         static Command()
         {
             AddSystemMacros();
+            AddEscapeMacros();
         }
         private static Func<string[], string> CreateWrapper(MethodInfo method)
         {
@@ -33,12 +34,34 @@ namespace Latexish_Text_Processor
             var methods = typeof(Command).GetMethods().Where((x) => x.CustomAttributes.Any((y) => y.AttributeType == typeof(MacroAttribute)));
             macros.AddRange(methods.Select((x) => new Macro { Name = x.Name, LazyParse = (x.GetCustomAttribute(typeof(MacroAttribute)) as MacroAttribute).LazyArguments, NumParameters = x.GetParameters().Length, Execute = CreateWrapper(x) }));
         }
+        private static void AddEscapeMacros()
+        {
+            var replacements = new Dictionary<string, string> { 
+            { "n", "\n" }
+            };
+            var escapeCharacters = "[]{}()";
+
+            macros.AddRange(replacements.Select(x => new Macro()
+                    {
+                        Name = x.Key,
+                        NumParameters = 0,
+                        LazyParse = false,
+                        Execute = (_) => x.Value
+                    }));
+            macros.AddRange(escapeCharacters.Select(x => new Macro()
+                {
+                    Name = x.ToString(),
+                    NumParameters=0,
+                    LazyParse=false,
+                    Execute = (_)=>x.ToString()
+                }));
+        }
         public static List<Macro> macros = new List<Macro>();
         public static string ExecuteCommand(string CommandName, params string[] Parameters)
         {
             //find macro that matches the number of arguments
             var macro = macros.FirstOrDefault((x) => x.Name == CommandName && x.NumParameters == Parameters.Length);
-            if (macro == null)//do some stuff to find it among included command engines
+            if (macro == null)
                 throw new InvalidOperationException("Macro " + CommandName + " not found");
             if (!macro.LazyParse)
             {
