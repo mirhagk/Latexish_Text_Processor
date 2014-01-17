@@ -47,4 +47,11 @@ The macro provider will be started, and passed various command line parameters. 
 
 The processor will send commands to the macro provider, which must respond to the command, and then wait for a new command. Each command will end with a newline (it uses `stream.WriteLine()`), and the response must end with a newline as well. This means newlines can't be in the message, so if they are required then it must instead send `\n`.
 
-Commands may have parameters, which are separated with the pipe character (`|`). If the pipe character is required you may specify it using `\|`. (so be careful using `string.split()`)
+Commands may have parameters, which are separated with the pipe character (`|`). If the pipe character is required you may specify it using `\|`. (so be careful using `string.split()`). The following list of commands are supported:
+
++ `listAvailable` - The macro provider should return a list of macros available, separated by pipes, each one followed by the number of parameters it accepts, for example:
+	`Test | 1 | Email | 4`
+Provides 2 commands, one test one that takes 1 argument, and an e-mail command that takes 4.
++ `call|%macroname%|%param1%|%param2%` - The call command is followed by the name of a macro and then the parameters. The provider will return the text to substitute at that location  
+
+More commands may be supported in future versions

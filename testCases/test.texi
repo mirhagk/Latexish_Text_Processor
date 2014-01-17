@@ -1,9 +1,20 @@
 [
 \newCommand{htmlTag}{2}{<\arg{1}>\arg{2}</\arg{1}>}
+\newCommand{html}{1}{\htmlTag{html}{\arg{1}}}
+
+\newCommand{page}{1}{\html{
+	\htmlTag{head}{}
+	\htmlTag{body}{
+		\arg{1}
+	}
+}
+}
+
+\newCommand{p}{1}{\htmlTag{p}{\arg{1}}}
+\newCommand{heading}{1}{\htmlTag{h1}{\arg{1}}}
+
 ]\
-\htmlTag{html}{
-    \htmlTag{head}{}
-    \htmlTag{body}{
-        \htmlTag{p}{This is a paragraph}
-    }
+\page{\
+	\heading{All about the world}
+	\p{This is a paragraph}
 }
