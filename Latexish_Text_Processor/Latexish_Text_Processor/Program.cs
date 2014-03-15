@@ -68,13 +68,13 @@ and the time is \time
             foreach (var file in FilesToProcess)
             {
                 Console.WriteLine("Processing {0}", file);
-                File.WriteAllText(Path.ChangeExtension(file, Extension), Parser.Process(File.ReadAllText(file)));
+                File.WriteAllText(Path.ChangeExtension(file, Extension), Parser.Process(File.ReadAllText(file), new string[] { "standardLibrary" }));
             }
             Console.WriteLine("done");
             //Console.WriteLine(Parser.Process(test2));
             //Console.ReadKey();
             //Console.WriteLine(Parser.Process(html));
-            //Console.ReadKey();
+            Console.ReadKey();
         }
     }
 }

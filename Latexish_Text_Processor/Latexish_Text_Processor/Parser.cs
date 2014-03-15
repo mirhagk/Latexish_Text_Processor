@@ -168,9 +168,14 @@ namespace Latexish_Text_Processor
         {
             return string.Join("\n", input.Split('\n').Where((x) => x.Trim('\r') != ""));
         }
-        public static string Process(string input)
+        public static string Process(string input, string[] includedFiles = null)
         {
-            string result="";
+            string result = "";
+            includedFiles = includedFiles??new string[0];
+            foreach(var includedFile in includedFiles)
+            {
+                Process(Command.ExecuteCommand("system.include", includedFile));
+            }
             foreach(var token in GetTokens(input))
             {
                 if (token is TextToken)

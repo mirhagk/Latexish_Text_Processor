@@ -3,6 +3,34 @@ Latexish Text Processor
 
 A text processor that allows latex-style macros.
 
+Roadmap
+---
+
+Current version: 0.2
+
++ 0.3 - Standard library created
++ 0.4 - CLI created
++ 0.5 - Minimized parser
++ 1.0 - Fully useable system, with specification, documentation, and examples
++ 2.0 Ability to define symbols
+
+Features
+---
+
+Macros can output other macros. For instance:
+
+	\foo
+
+Could output
+
+	\bar
+
+which would then be processed, and possibly return
+
+	baz
+
+
+
 Plans
 ----
 

@@ -31,6 +31,12 @@ namespace Latexish_Text_Processor
         {
             return "yyyy-MM-dd hh:mm";
         }
+        [Macro(false)]
+        public static string include(string filename)
+        {
+            filename = System.IO.Path.HasExtension(filename) ? filename : System.IO.Path.ChangeExtension(filename, ".texi");
+            return System.IO.File.ReadAllText(filename);
+        }
         [Macro]
         public static string format()
         {
@@ -49,12 +55,13 @@ namespace Latexish_Text_Processor
             return "";
         }
         [Macro]
-        public static string newCommand(string name, string numParameters, string text)
+        public static string newCommand(string name, string numParameters, string lazyParsed, string text)
         {
+            lazyParsed = Parser.Process(lazyParsed).Trim();
             int numParam = int.Parse(numParameters);
             macros.Add(new Macro()
             {
-                LazyParse = true,
+                LazyParse = lazyParsed=="1",
                 Name = name,
                 NumParameters = numParam,
                 Execute = (p) =>
@@ -62,7 +69,7 @@ namespace Latexish_Text_Processor
                         string result = text;
                         for (int i = 0; i < numParam; i++)
                         {
-                            result = result.Replace("\\arg{" + (i+1) + "}", p[i]);
+                            result = result.Replace("#" + (i+1), p[i]);
                         }
                         return result;
                     }
