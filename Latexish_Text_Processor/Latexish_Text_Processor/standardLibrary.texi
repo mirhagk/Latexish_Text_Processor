@@ -1,14 +1,43 @@
 ﻿[
-\system.newCommand{newCommand}[1]{\system.newCommand{\system.arg{1}}}
-\newCommand{arg}[1]{\system.arg{1}}
+[[[Aliases for system methods. These are the only methods that a system needs to implement]]]
 
-\newCommand{define}[2]{\newCommand{\arg{1}}{\arg{2}}}
 
-\newCommand{now}[1]{\system.now{\arg{1}}
+[[[Creates a new command, the penultimate method of the parser. Takes 4 parameters, 1st is the name of the command, the 2nd is how many parameters it accepts, the 3rd is whether the parameters are parsed lazily or not, and the 4th is the actual command definition]]]
+\system.newCommand{newCommand}{4}{1}{\system.newCommand{\system.arg{1}}{\system.arg{2}}{\system.arg{3}}{\system.arg{4}}}
+[[[Return the argument in the position specified]]]
+\newCommand{arg}{1}{1}{\system.arg{1}}
+[[[Return the system time in the format specified. Format is as DateTime.Format on .NET platform]]]
+\newCommand{now}{1}{1}{\system.now{\arg{1}}}
+[[[Includes a file within the current file]]]
+\newCommand{include}{1}{1}{\system.include{\arg{1}}}
 
+
+[[[End of system methods, the following methods all make use of the given system methods to define new methods for the standard library]]]
+
+[[[Helper command to simply replace with the given text, allows creating aliases and variables easily]]]
+\newCommand{define}{2}{1}{\newCommand{\arg{1}}{\arg{2}}}
+
+[[[true and false]]]
+\define{true}{1}
+\define{false}{0}
+
+[[[newCommand override that leaves out the lazy parameter (assumes true)]]]
+\newCommand{newCommand}{3}{\true}{\newCommand{\arg{1}}{\arg{2}}{\true}{\arg{3}}}
+[[[newCommand override that leaves out both the lazy parameter and the number of arguments (assumes 0)]]]
+\newCommand{newCommand}{2}{\newCommand{\arg{1}}{0}{\arg{2}}}
+
+[[[Default date format]]]
+\define{formatDate}{yyyy-MM-dd}
+[[[Default time format]]]
+\define{formatTime}{hh:mm}
+[[[Default date and time format (calls date and time)]]]
+\define{formatDateTime}{\formatDate \formatTime}
+
+[[[Return the current time]]]
 \define{now}{\now{\formatDateTime}}
 
-
+[[[Allows the contents to be parsed lazily, by default all user defined functions are processed lazily, but can be processed eagerily if desired, this provides a way to escape the eager evaluation]]]
+\newCommand{lazy}{1}{\arg{1}}
 
 
 
