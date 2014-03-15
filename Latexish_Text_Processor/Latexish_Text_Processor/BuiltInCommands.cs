@@ -19,7 +19,7 @@ namespace Latexish_Text_Processor
         [Macro]
         public static string now()
         {
-            return DateTime.Now.ToString("yyyy-MM-dd");
+            return DateTime.Now.ToString(ExecuteCommand("formatDateTime"));
         }
         [Macro(false)]
         public static string now(string format)
@@ -27,7 +27,12 @@ namespace Latexish_Text_Processor
             return DateTime.Now.ToString(format);
         }
         [Macro]
-        public static string timeFormat()
+        public static string formatDateTime()
+        {
+            return "yyyy-MM-dd hh:mm";
+        }
+        [Macro]
+        public static string format()
         {
             return "hh:mm";
         }

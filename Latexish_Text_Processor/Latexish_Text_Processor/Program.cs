@@ -47,7 +47,7 @@ and the time is \time
                 {
                     if (i > args.Length - 2)
                     {
-                        Console.Error.WriteLine("No value specified for command line swtich {0}", args[i]);
+                        Console.Error.WriteLine("No value specified for command line switch {0}", args[i]);
                         return;
                     }
                     switch (args[i].Substring(1))

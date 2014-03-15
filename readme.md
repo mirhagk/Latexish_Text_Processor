@@ -6,9 +6,16 @@ A text processor that allows latex-style macros.
 Plans
 ----
 
-The basic functionality has all been created, the next step is to set up the command line interface.
+The basic functionality has all been created, the next step is to set up the command line interface, and create the standard library and several examples.
 
-After that the additional commands described below should be added
+
+Standard library
+---
+
++ `\processAndIgnore` - *eager* - process whatever is inside the tags, but ignore the result. This is useful for wrapping a section of `\newCommand` macros without their whitespace appearing
++ `\rawInsert` - *lazy* - don't process whatever is contained within this section, just include it verbatim. The only command that works within this mode is `\}` which is required in order to escape `}` so that the command doesn't end early.
++ `\comment` - *lazy* - equivalent to both `\processAndIgnore` and `\rawInsert`. Again the only command that works inside it `\}`
++ `\now{format}` - returns the current date and time formatted as specified
 
 Commands to add:
 ---

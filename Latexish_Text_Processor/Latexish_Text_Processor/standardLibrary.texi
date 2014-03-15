@@ -1,0 +1,15 @@
+﻿[
+\system.newCommand{newCommand}[1]{\system.newCommand{\system.arg{1}}}
+\newCommand{arg}[1]{\system.arg{1}}
+
+\newCommand{define}[2]{\newCommand{\arg{1}}{\arg{2}}}
+
+\newCommand{now}[1]{\system.now{\arg{1}}
+
+\define{now}{\now{\formatDateTime}}
+
+
+
+
+
+]
