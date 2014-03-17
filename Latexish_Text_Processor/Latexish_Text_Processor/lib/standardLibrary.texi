@@ -37,3 +37,7 @@
 
 [[[Allows the contents to be parsed lazily, by default all user defined functions are processed lazily, but can be processed eagerily if desired, this provides a way to escape the eager evaluation]]]
 \newCommand{lazy}{1}{#1}
+
+[[[Similar to include, but only processes the file, it doesn't actually include it]]]
+
+\newCommand{import}{1}{[\include{#1}]}

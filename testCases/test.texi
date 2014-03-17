@@ -1,17 +1,5 @@
-[
-\newCommand{htmlTag}{2}{<#1>#2</#1>}
-\newCommand{html}{1}{\htmlTag{html}{#1}}
-
-\newCommand{page}{1}{\html{
-	\htmlTag{head}{}
-	\htmlTag{body}{#1}}
-}
-
-\newCommand{p}{1}{\htmlTag{p}{#1}}
-\newCommand{heading}{1}{\htmlTag{h1}{#1}}
-
-]\
-\page{\
+\import{html}
+\document{
 	\heading{All about the world}
 	\p{This is a paragraph}
 	\p{fun stuff}
