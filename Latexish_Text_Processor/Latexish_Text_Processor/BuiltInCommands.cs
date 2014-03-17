@@ -42,6 +42,8 @@ namespace Latexish_Text_Processor
             locationsToLook.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             locationsToLook.Add(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
             locationsToLook.Add(Environment.CurrentDirectory);
+
+            locationsToLook.AddRange(locationsToLook.Select(l => Path.Combine(l, "lib")).ToList());
             foreach(var location in locationsToLook)
             {
                 if (File.Exists(Path.Combine(location, filename)))
