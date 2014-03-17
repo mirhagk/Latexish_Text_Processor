@@ -12,7 +12,8 @@ Current version: 0.2
 + 0.4 - CLI created
 + 0.5 - Minimized parser
 + 1.0 - Fully useable system, with specification, documentation, and examples
-+ 2.0 Ability to define symbols
++ 2.0 - Ability to define symbols
++ 2.1 - Package manager
 
 Features
 ---
@@ -29,12 +30,30 @@ which would then be processed, and possibly return
 
 	baz
 
+This is very powerful, and lets you build up useful libraries of helper functions, and create semantic documents rather than syntatic documents. Here's an example. Assume that a `\bold` and a `\italics` tags exist. Let's say you're writing a screenplay. Instead of doing:
 
+	\italics{bob}: "Hey don't do that"
+	\italics{craig}: \bold{Continues to do what he was doing}
+
+You can define some macros like so:
+
+	\newCommand{actor}{1}{\italics{#1}:}
+	\newCommand{says}{1}{"#1"}
+	\newCommand{does}{1}{\bold{#1}}
+
+Then you can write:
+
+	\actor{bob} \says{Hey don't do that}
+	\actor{craig} \does{Continues to do what he was doing}
+
+The benefit of doing this is that now the document has only *semantic* formatting, that is the only formatting that exists in the body is formatting that has real meaning, rather than what you decide the style should look like. If the editor later says "Actually I think you should use single quotes instead" you only need to change it in one place (in this case you do `\newCommand{says}{1}{'#1'}`) 
+	
 
 Plans
 ----
 
 The basic functionality has all been created, the next step is to set up the command line interface, and create the standard library and several examples.
+
 
 
 Standard library
