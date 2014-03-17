@@ -18,20 +18,10 @@ namespace Latexish_Text_Processor
     }
     partial class Command
     {
-        [Macro]
-        public static string now()
-        {
-            return DateTime.Now.ToString(ExecuteCommand("formatDateTime"));
-        }
         [Macro(false)]
         public static string now(string format)
         {
             return DateTime.Now.ToString(format);
-        }
-        [Macro]
-        public static string formatDateTime()
-        {
-            return "yyyy-MM-dd hh:mm";
         }
         [Macro(false)]
         public static string include(string filename)
@@ -52,23 +42,6 @@ namespace Latexish_Text_Processor
                 }
             }
             throw new IOException(string.Format("Could not find {0}, searched \"{1}\"", filename, string.Join(", ", locationsToLook)));
-        }
-        [Macro]
-        public static string format()
-        {
-            return "hh:mm";
-        }
-        [Macro]
-        public static string newCommand(string name, string text)
-        {
-            macros.Add(new Macro()
-                {
-                    LazyParse = true,
-                    Name = name,
-                    NumParameters = 0,
-                    Execute = (p) => text
-                });
-            return "";
         }
         [Macro]
         public static string newCommand(string name, string numParameters, string lazyParsed, string text)

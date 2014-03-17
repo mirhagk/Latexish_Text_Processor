@@ -27,7 +27,6 @@ namespace Latexish_Text_Processor
                 {
                     return method.Invoke(null, arguments).ToString();
                 };
-            //method.GetParameters().
         }
         private static void AddSystemMacros()
         {
@@ -70,8 +69,7 @@ namespace Latexish_Text_Processor
                     Parameters[i] = Parser.Process(Parameters[i]);
                 }
             }
-            return macro.Execute(Parameters); ;
-            //Parser.Tokenizer()
+            return macro.Execute(Parameters);
         }
     }
 }
