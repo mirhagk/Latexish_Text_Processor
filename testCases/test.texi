@@ -4,10 +4,7 @@
 
 \newCommand{page}{1}{\html{
 	\htmlTag{head}{}
-	\htmlTag{body}{
-		#1
-	}
-}
+	\htmlTag{body}{#1}}
 }
 
 \newCommand{p}{1}{\htmlTag{p}{#1}}

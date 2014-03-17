@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,8 +36,20 @@ namespace Latexish_Text_Processor
         [Macro(false)]
         public static string include(string filename)
         {
-            filename = System.IO.Path.HasExtension(filename) ? filename : System.IO.Path.ChangeExtension(filename, ".texi");
-            return System.IO.File.ReadAllText(filename);
+            filename = Path.HasExtension(filename) ? filename : Path.ChangeExtension(filename, ".texi");
+
+            List<string> locationsToLook = new List<string>();
+            locationsToLook.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            locationsToLook.Add(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
+            locationsToLook.Add(Environment.CurrentDirectory);
+            foreach(var location in locationsToLook)
+            {
+                if (File.Exists(Path.Combine(location, filename)))
+                {
+                    return File.ReadAllText(Path.Combine(location, filename));
+                }
+            }
+            throw new IOException(string.Format("Could not find {0}, searched \"{1}\"", filename, string.Join(", ", locationsToLook)));
         }
         [Macro]
         public static string format()

@@ -74,7 +74,7 @@ and the time is \time
             //Console.WriteLine(Parser.Process(test2));
             //Console.ReadKey();
             //Console.WriteLine(Parser.Process(html));
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }
