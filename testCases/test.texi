@@ -1,6 +1,6 @@
 \import{html}
 \document{
-	\heading{All about the world}
+	\heading{About texi}
 	\p{This is a paragraph}
 	\p{fun stuff}
 }

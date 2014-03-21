@@ -1,0 +1,15 @@
+\newCommand{update}{3}{update dbo.#1 set #2 = #3}
+\newCommand{for}{3}{
+DECLARE @index_middle
+SET @index_middle = #1
+WHILE @index_middle < #2
+BEGIN
+#3
+END
+}
+
+
+\update{employee}{employeeid}{100}
+
+
+\for{1}{3}{print @index_middle}
