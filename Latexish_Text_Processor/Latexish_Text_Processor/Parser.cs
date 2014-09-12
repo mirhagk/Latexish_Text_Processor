@@ -25,7 +25,12 @@ namespace Latexish_Text_Processor
         public class IgnoreToken : Token { }
         public class ExcludeToken : Token { }
         public class CommentToken : Token { }
-        private static IEnumerable<Token> GetTokens(string input)
+        public Parser()
+        {
+            MacroProviders = new List<IMacroProvider>();
+            MacroProviders.Add(new Command(this));
+        }
+        private IEnumerable<Token> GetTokens(string input)
         {
             Token token = null;
             var currentLine =1;
@@ -61,16 +66,22 @@ namespace Latexish_Text_Processor
                             yield return textToken;
                         if (i < input.Length - 1 && input[i + 1] == '[')
                         {
-                            if (i < input.Length - 2 && input[i + 1] == '[')
+                            if (i < input.Length - 2 && input[i + 2] == '[')
                             {
                                 token = new CommentToken();
+                                token.Location = i += 2;
                             }
                             else
+                            {
                                 token = new IgnoreToken();
+                                token.Location = ++i;
+                            }
                         }
                         else
+                        {
                             token = new ExcludeToken();
-                        token.Location = i;
+                            token.Location = i;
+                        }
                         token.Line = currentLine;
                         token.Length = 1;
                     }
@@ -160,21 +171,38 @@ namespace Latexish_Text_Processor
                 yield return token;
             yield break;
         }
-        public static IEnumerable<Token> Tokenizer(string input)
+        public IEnumerable<Token> Tokenizer(string input)
         {
             return GetTokens(input);
         }
-        public static string FinalClear(string input)
+        public string FinalClear(string input)
         {
             return string.Join("\n", input.Split('\n').Where((x) => x.Trim('\r') != ""));
         }
-        public static string Process(string input, string[] includedFiles = null)
+        public List<IMacroProvider> MacroProviders { get; private set; }
+        private string ExecuteCommand(string commandName, params string[] parameters)
+        {
+            foreach (var provider in MacroProviders)
+            {
+                var result = provider.ExecuteCommand(commandName, parameters);
+                if (result != null)
+                    return result;
+                if (parameters.Any() && parameters.First() == "")
+                {
+                    result = provider.ExecuteCommand(commandName, parameters.Skip(1).ToArray());
+                    if (result != null)
+                        return result;
+                }
+            }
+            throw new InvalidOperationException("Macro " + commandName + " not found");
+        }
+        public string Process(string input, string[] includedFiles = null)
         {
             string result = "";
             includedFiles = includedFiles??new string[0];
             foreach(var includedFile in includedFiles)
             {
-                Process(Command.ExecuteCommand("system.include", includedFile));
+                Process(ExecuteCommand("system.include", includedFile));
             }
             foreach(var token in GetTokens(input))
             {
@@ -191,12 +219,16 @@ namespace Latexish_Text_Processor
                 else if (token is CommandToken)
                 {
                     var command = token as CommandToken;
-                    result += Process(Command.ExecuteCommand(command.Text, command.Parameters.ToArray()));
+                    result += Process(ExecuteCommand(command.Text, command.Parameters.ToArray()));
+                }
+                else
+                {
+
                 }
             }
             return result;
         }
-        private static Tuple<char?,int> GetNextNonWhitespace(string input, int position)
+        private Tuple<char?,int> GetNextNonWhitespace(string input, int position)
         {
             for (int i = position + 1; i < input.Length; i++)
             {

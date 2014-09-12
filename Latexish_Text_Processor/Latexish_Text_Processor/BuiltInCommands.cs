@@ -19,12 +19,12 @@ namespace Latexish_Text_Processor
     partial class Command
     {
         [Macro(false)]
-        public static string now(string format)
+        public string now(string format)
         {
             return DateTime.Now.ToString(format);
         }
         [Macro(false)]
-        public static string include(string filename)
+        public string include(string filename)
         {
             filename = Path.HasExtension(filename) ? filename : Path.ChangeExtension(filename, ".texi");
 
@@ -44,9 +44,9 @@ namespace Latexish_Text_Processor
             throw new IOException(string.Format("Could not find {0}, searched \"{1}\"", filename, string.Join(", ", locationsToLook)));
         }
         [Macro]
-        public static string newCommand(string name, string numParameters, string lazyParsed, string text)
+        public string newCommand(string name, string numParameters, string lazyParsed, string text)
         {
-            lazyParsed = Parser.Process(lazyParsed).Trim();
+            lazyParsed = parser.Process(lazyParsed).Trim();
             int numParam = int.Parse(numParameters);
             macros.Add(new Macro()
             {

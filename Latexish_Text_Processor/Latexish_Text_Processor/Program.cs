@@ -13,10 +13,17 @@ namespace Latexish_Text_Processor
         static List<string> FilesToProcess = new List<string>();
         static void Main(string[] args)
         {
+            var parser = new Parser();
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i].StartsWith("--"))
                 {
+                    switch (args[i].Substring(2).ToLowerInvariant())
+                    {
+                        case "preprocess":
+                            parser.MacroProviders.Add(new PreprocessProvider());
+                            break;
+                    }
                 }
                 else if (args[i].StartsWith("-"))
                 {
@@ -25,7 +32,7 @@ namespace Latexish_Text_Processor
                         Console.Error.WriteLine("No value specified for command line switch {0}", args[i]);
                         return;
                     }
-                    switch (args[i].Substring(1))
+                    switch (args[i].Substring(1).ToLowerInvariant())
                     {
                         case "e":
                             goto case "extension";
@@ -43,7 +50,7 @@ namespace Latexish_Text_Processor
             foreach (var file in FilesToProcess)
             {
                 Console.WriteLine("Processing {0}", file);
-                File.WriteAllText(Path.ChangeExtension(file, Extension), Parser.Process(File.ReadAllText(file), new string[] { "standardLibrary" }));
+                File.WriteAllText(Path.ChangeExtension(file, Extension), parser.Process(File.ReadAllText(file), new string[] { "standardLibrary" }));
             }
             Console.WriteLine("done");
         }

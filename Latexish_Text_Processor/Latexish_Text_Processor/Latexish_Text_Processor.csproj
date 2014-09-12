@@ -43,7 +43,9 @@
   <ItemGroup>
     <Compile Include="BuiltInCommands.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="IMacroProvider.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="PreprocessProvider.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
