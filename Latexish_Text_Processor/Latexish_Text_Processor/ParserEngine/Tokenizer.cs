@@ -1,39 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Latexish_Text_Processor
+namespace Latexish_Text_Processor.ParserEngine
 {
-    class Parser
+    public abstract class Token
     {
-        public abstract class Token
-        {
-            public int Location = -1;
-            public int Length = 0;
-            public int Line = -1;
-            public string Text = "";
-        }
-        public class TextToken : Token { }
-        public class CommandToken : Token
-        {
-            public List<string> Parameters = new List<string>();
-        }
-        public class IgnoreToken : Token { }
-        public class ExcludeToken : Token { }
-        public class CommentToken : Token { }
-        public Parser()
-        {
-            MacroProviders = new List<IMacroProvider>();
-            MacroProviders.Add(new Command(this));
-        }
-        private IEnumerable<Token> GetTokens(string input)
+        public int Location = -1;
+        public int Length = 0;
+        public int Line = -1;
+        public string Text = "";
+    }
+    public class TextToken : Token { }
+    public class CommandToken : Token
+    {
+        public List<string> Parameters = new List<string>();
+    }
+    public class IgnoreToken : Token { }
+    public class ExcludeToken : Token { }
+    public class CommentToken : Token { }
+    class Tokenizer
+    {
+        public IEnumerable<Token> GetTokens(string input)
         {
             Token token = null;
-            var currentLine =1;
+            var currentLine = 1;
             int nestedDepth = 0;
             for (int i = 0; i < input.Length; i++)
             {
@@ -48,7 +42,7 @@ namespace Latexish_Text_Processor
                     }
                     if (input[i] == '\\')
                     {
-                        if (i < input.Length + 1 && (input[i+1] == '\n' || input[i+1] == '\r'))
+                        if (i < input.Length + 1 && (input[i + 1] == '\n' || input[i + 1] == '\r'))
                         {
                             i = GetNextNonWhitespace(input, i).Item2 - 1;
                             continue;
@@ -93,7 +87,7 @@ namespace Latexish_Text_Processor
                 }
                 else if (token is CommentToken)
                 {
-                    if (i < input.Length - 2 && input[i] == ']' && input[i + 1] == ']' && input[i+2] == ']')
+                    if (i < input.Length - 2 && input[i] == ']' && input[i + 1] == ']' && input[i + 2] == ']')
                     {
                         token = null;
                         i += 2;
@@ -101,7 +95,7 @@ namespace Latexish_Text_Processor
                 }
                 else if (token is ExcludeToken || token is IgnoreToken)
                 {
-                    if (input[i] == ']'&&input[i-1]!='\\')
+                    if (input[i] == ']' && input[i - 1] != '\\')
                     {
                         if (token is ExcludeToken)
                         {
@@ -172,69 +166,13 @@ namespace Latexish_Text_Processor
                 yield return token;
             yield break;
         }
-        public IEnumerable<Token> Tokenizer(string input)
-        {
-            return GetTokens(input);
-        }
-        public string FinalClear(string input)
-        {
-            return string.Join("\n", input.Split('\n').Where((x) => x.Trim('\r') != ""));
-        }
-        public List<IMacroProvider> MacroProviders { get; private set; }
-        public string ActiveFolder { get; set; }
-        private string ExecuteCommand(string commandName, params string[] parameters)
-        {
-            foreach (var provider in MacroProviders)
-            {
-                var result = provider.ExecuteCommand(commandName, parameters);
-                if (result != null)
-                    return result;
-                if (parameters.Any() && parameters.First() == "")
-                {
-                    result = provider.ExecuteCommand(commandName, parameters.Skip(1).ToArray());
-                    if (result != null)
-                        return result;
-                }
-            }
-            throw new InvalidOperationException("Macro " + commandName + " not found");
-        }
-        public string Process(string input, string[] includedFiles = null)
-        {
-            string result = "";
-            includedFiles = includedFiles??new string[0];
-            foreach(var includedFile in includedFiles)
-            {
-                Process(ExecuteCommand("system.include", includedFile));
-            }
-            foreach(var token in GetTokens(input))
-            {
-                if (token is TextToken)
-                    result+=(token as TextToken).Text;
-                else if (token is ExcludeToken)
-                {
-                    Process(token.Text);
-                }
-                else if (token is IgnoreToken)
-                {
-                    result += token.Text;
-                }
-                else if (token is CommandToken)
-                {
-                    var command = token as CommandToken;
-                    result += Process(ExecuteCommand(command.Text, command.Parameters.ToArray()));
-                }
-                else
-                    System.Diagnostics.Debug.Fail("Token was an unexpected token type");
-            }
-            return result;
-        }
-        private Tuple<char?,int> GetNextNonWhitespace(string input, int position)
+        private Tuple<char?, int> GetNextNonWhitespace(string input, int position)
         {
             for (int i = position + 1; i < input.Length; i++)
             {
                 if (Regex.IsMatch(input[i].ToString(), "\\s"))
                     continue;
-                return Tuple.Create<char?,int>(input[i], i);
+                return Tuple.Create<char?, int>(input[i], i);
             }
             return Tuple.Create<char?, int>(null, input.Length);
         }

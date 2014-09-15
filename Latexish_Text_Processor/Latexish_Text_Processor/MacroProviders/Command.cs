@@ -4,8 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Latexish_Text_Processor.ParserEngine;
 
-namespace Latexish_Text_Processor
+namespace Latexish_Text_Processor.MacroProviders
 {
     partial class Command : IMacroProvider
     {

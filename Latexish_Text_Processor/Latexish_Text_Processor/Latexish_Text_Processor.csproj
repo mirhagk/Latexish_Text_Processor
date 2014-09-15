@@ -41,11 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuiltInCommands.cs" />
-    <Compile Include="Command.cs" />
-    <Compile Include="IMacroProvider.cs" />
-    <Compile Include="Parser.cs" />
-    <Compile Include="PreprocessProvider.cs" />
+    <Compile Include="MacroProviders\BuiltInCommands.cs" />
+    <Compile Include="MacroProviders\Command.cs" />
+    <Compile Include="MacroProviders\IMacroProvider.cs" />
+    <Compile Include="ParserEngine\Parser.cs" />
+    <Compile Include="MacroProviders\PreprocessProvider.cs" />
+    <Compile Include="ParserEngine\Tokenizer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
