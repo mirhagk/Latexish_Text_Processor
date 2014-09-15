@@ -129,6 +129,7 @@ namespace Latexish_Text_Processor
                         {
                             yield return commandToken;
                             token = null;
+                            i--;
                         }
                         else if (commandToken.Length > 1 && input[i] == '{')
                             commandToken.Parameters.Add("");
@@ -180,6 +181,7 @@ namespace Latexish_Text_Processor
             return string.Join("\n", input.Split('\n').Where((x) => x.Trim('\r') != ""));
         }
         public List<IMacroProvider> MacroProviders { get; private set; }
+        public string ActiveFolder { get; set; }
         private string ExecuteCommand(string commandName, params string[] parameters)
         {
             foreach (var provider in MacroProviders)
@@ -222,9 +224,7 @@ namespace Latexish_Text_Processor
                     result += Process(ExecuteCommand(command.Text, command.Parameters.ToArray()));
                 }
                 else
-                {
-
-                }
+                    System.Diagnostics.Debug.Fail("Token was an unexpected token type");
             }
             return result;
         }

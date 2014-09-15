@@ -1,9 +1,9 @@
-\define{Money}{100}
+[\define{Money}{100}
 \define{Title}{Prince}
 \define{Country}{Nigeria}
-
+]\
 Dear \Target{},
 
-I am the \Title of \Country . I was awarded a sum of $\Money , but my government is corrupt. I must transfer the funds to a \TargetCountry bank account, please send me your account number so I can transfer it into your account. For your troubles I will leave \Math.Percentage{10}{\Money} of my money in your account.
+I am the \Title of \Country{}. I was awarded a sum of $\Money{}, but my government is corrupt. I must transfer the funds to a \TargetCountry bank account, please send me your account number so I can transfer it into your account. For your troubles I will leave \Math.Percentage{10}{\Money} of my money in your account.
 
 Thank you for your troubles.

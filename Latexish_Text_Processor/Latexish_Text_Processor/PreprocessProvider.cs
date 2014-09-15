@@ -10,7 +10,7 @@ namespace Latexish_Text_Processor
     {
         public string ExecuteCommand(string CommandName, params string[] Parameters)
         {
-            return "[[\\" + CommandName + string.Join("", Parameters.Select(p => "{" + p + "}"))+" [] ]]";
+            return "[[\\" + CommandName + string.Join("", Parameters.Select(p => "{" + p + "}"))+"]]";
         }
     }
 }

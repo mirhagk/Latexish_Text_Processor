@@ -49,6 +49,7 @@ namespace Latexish_Text_Processor
             }
             foreach (var file in FilesToProcess)
             {
+                parser.ActiveFolder = System.IO.Path.GetDirectoryName(file);
                 Console.WriteLine("Processing {0}", file);
                 File.WriteAllText(Path.ChangeExtension(file, Extension), parser.Process(File.ReadAllText(file), new string[] { "standardLibrary" }));
             }
