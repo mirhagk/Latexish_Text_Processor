@@ -41,8 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MacroProviders\BuiltInCommands.cs" />
-    <Compile Include="MacroProviders\Command.cs" />
+    <Compile Include="MacroProviders\StandardProvider.cs" />
+    <Compile Include="MacroProviders\CodeProvider.cs" />
+    <Compile Include="MacroProviders\CommandProvider.cs" />
     <Compile Include="MacroProviders\IMacroProvider.cs" />
     <Compile Include="MacroProviders\MathProvider.cs" />
     <Compile Include="ParserEngine\Parser.cs" />

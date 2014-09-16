@@ -10,7 +10,7 @@ namespace Latexish_Text_Processor.ParserEngine
         public Parser()
         {
             MacroProviders = new List<IMacroProvider>();
-            MacroProviders.Add(new Command(this));
+            MacroProviders.Add(new StandardProvider(this));
         }
         public string FinalClear(string input)
         {

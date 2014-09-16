@@ -8,16 +8,35 @@ using System.Threading.Tasks;
 
 namespace Latexish_Text_Processor.MacroProviders
 {
-    class MacroAttribute:Attribute
+    class StandardProvider : CommandProvider
     {
-        public bool LazyArguments;
-        public MacroAttribute(bool LazyArguments=true)
+        public StandardProvider(ParserEngine.Parser parser)
+            : base(parser)
         {
-            this.LazyArguments = LazyArguments;
+            AddEscapeMacros();
         }
-    }
-    partial class Command
-    {
+        private void AddEscapeMacros()
+        {
+            var replacements = new Dictionary<string, string> { 
+            { "n", "\n" }
+            };
+            var escapeCharacters = "[]{}()";
+
+            macros.AddRange(replacements.Select(x => new Macro()
+            {
+                Name = x.Key,
+                NumParameters = 0,
+                LazyParse = false,
+                Execute = (_) => x.Value
+            }));
+            macros.AddRange(escapeCharacters.Select(x => new Macro()
+            {
+                Name = x.ToString(),
+                NumParameters = 0,
+                LazyParse = false,
+                Execute = (_) => x.ToString()
+            }));
+        }
         [Macro(false)]
         public string now(string format)
         {

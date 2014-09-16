@@ -8,7 +8,15 @@ using Latexish_Text_Processor.ParserEngine;
 
 namespace Latexish_Text_Processor.MacroProviders
 {
-    partial class Command : IMacroProvider
+    class MacroAttribute : Attribute
+    {
+        public bool LazyArguments;
+        public MacroAttribute(bool LazyArguments = true)
+        {
+            this.LazyArguments = LazyArguments;
+        }
+    }
+    abstract class CommandProvider : IMacroProvider
     {
         public class Macro
         {
@@ -17,13 +25,12 @@ namespace Latexish_Text_Processor.MacroProviders
             public int NumParameters { get; set; }
             public Func<string[], string> Execute;
         }
-        public Command(Parser parser)
+        public CommandProvider(Parser parser)
         {
             this.parser = parser;
             AddSystemMacros();
-            AddEscapeMacros();
         }
-        private Parser parser;
+        protected Parser parser;
         private Func<string[], string> CreateWrapper(MethodInfo method)
         {
             return (arguments)=>
@@ -33,30 +40,8 @@ namespace Latexish_Text_Processor.MacroProviders
         }
         private void AddSystemMacros()
         {
-            var methods = typeof(Command).GetMethods().Where((x) => x.CustomAttributes.Any((y) => y.AttributeType == typeof(MacroAttribute)));
+            var methods = this.GetType().GetMethods().Where((x) => x.CustomAttributes.Any((y) => y.AttributeType == typeof(MacroAttribute)));
             macros.AddRange(methods.Select((x) => new Macro { Name = "system."+x.Name, LazyParse = (x.GetCustomAttribute(typeof(MacroAttribute)) as MacroAttribute).LazyArguments, NumParameters = x.GetParameters().Length, Execute = CreateWrapper(x) }));
-        }
-        private void AddEscapeMacros()
-        {
-            var replacements = new Dictionary<string, string> { 
-            { "n", "\n" }
-            };
-            var escapeCharacters = "[]{}()";
-
-            macros.AddRange(replacements.Select(x => new Macro()
-                    {
-                        Name = x.Key,
-                        NumParameters = 0,
-                        LazyParse = false,
-                        Execute = (_) => x.Value
-                    }));
-            macros.AddRange(escapeCharacters.Select(x => new Macro()
-                {
-                    Name = x.ToString(),
-                    NumParameters=0,
-                    LazyParse=false,
-                    Execute = (_)=>x.ToString()
-                }));
         }
         public List<Macro> macros = new List<Macro>();
         public string ExecuteCommand(string CommandName, params string[] Parameters)
