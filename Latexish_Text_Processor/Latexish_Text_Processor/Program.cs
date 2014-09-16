@@ -25,6 +25,9 @@ namespace Latexish_Text_Processor
                         case "preprocess":
                             parser.MacroProviders.Add(new PreprocessProvider());
                             break;
+                        case "math":
+                            parser.MacroProviders.Add(new MathProvider { Parser = parser });
+                            break;
                     }
                 }
                 else if (args[i].StartsWith("-"))
