@@ -8,11 +8,6 @@ namespace UnitTests
     [TestClass]
     public class StandardTests
     {
-        public string StandardProcess(string input)
-        {
-            var parser = new Parser();
-            return parser.Process(input, new string[] { "standardLibrary.texi" });
-        }
         [TestMethod]
         public void NoReplacements()
         {
@@ -47,9 +42,7 @@ namespace UnitTests
         [TestMethod]
         public void CommentIgnoresDefine()
         {
-            var parser = new Parser();
-            parser.MacroProviders.Add(new Latexish_Text_Processor.MacroProviders.PreprocessProvider());
-            var result = parser.Process(@"[[[\define{ignoreThis}{wasn't ignored}]]]\ignoreThis");
+            var result = StandardProcess(@"[[[\define{ignoreThis}{wasn't ignored}]]]\ignoreThis", true);
             Assert.AreEqual(@"\ignoreThis", result);
         }
         [TestMethod]
