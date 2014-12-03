@@ -5,7 +5,7 @@ using Latexish_Text_Processor.MacroProviders;
 
 namespace Latexish_Text_Processor.ParserEngine
 {
-    class Parser
+    public class Parser
     {
         public Parser()
         {

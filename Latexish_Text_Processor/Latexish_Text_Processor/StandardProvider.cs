@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Latexish_Text_Processor.MacroProviders
 {
-    class StandardProvider : CommandProvider
+    public class StandardProvider : CommandProvider
     {
         public StandardProvider(ParserEngine.Parser parser)
             : base(parser)

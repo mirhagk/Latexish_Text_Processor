@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Latexish_Text_Processor.MacroProviders
 {
-    class CodeProvider : CommandProvider
+    public class CodeProvider : CommandProvider
     {
         public CodeProvider(ParserEngine.Parser parser) : base(parser) { }
         [Macro(false)]

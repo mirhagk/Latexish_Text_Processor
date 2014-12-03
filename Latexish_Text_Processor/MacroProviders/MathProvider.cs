@@ -9,7 +9,7 @@ namespace Latexish_Text_Processor.MacroProviders
     /// <summary>
     /// This provider provides access to mathematical functions, allowing you to do basic math in the document
     /// </summary>
-    class MathProvider :IMacroProvider
+    public class MathProvider :IMacroProvider
     {
         public Dictionary<string, Func<double, double, double>> BinaryFunctions = new Dictionary<string, Func<double, double, double>>
         {

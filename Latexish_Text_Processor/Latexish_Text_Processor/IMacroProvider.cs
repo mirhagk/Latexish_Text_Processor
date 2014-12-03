@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Latexish_Text_Processor.MacroProviders
 {
-    interface IMacroProvider
+    public interface IMacroProvider
     {
         /// <summary>
         /// Attempt to execute this command and return the result. Returns null if it cannot find this command

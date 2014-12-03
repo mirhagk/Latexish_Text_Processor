@@ -8,7 +8,7 @@ using Latexish_Text_Processor.ParserEngine;
 
 namespace Latexish_Text_Processor.MacroProviders
 {
-    class MacroAttribute : Attribute
+    public class MacroAttribute : Attribute
     {
         public bool LazyArguments;
         public MacroAttribute(bool LazyArguments = true)
@@ -16,7 +16,7 @@ namespace Latexish_Text_Processor.MacroProviders
             this.LazyArguments = LazyArguments;
         }
     }
-    abstract class CommandProvider : IMacroProvider
+    public abstract class CommandProvider : IMacroProvider
     {
         public class Macro
         {

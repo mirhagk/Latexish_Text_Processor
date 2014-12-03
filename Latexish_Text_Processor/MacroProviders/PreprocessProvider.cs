@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Latexish_Text_Processor.MacroProviders
 {
-    class PreprocessProvider:IMacroProvider
+    public class PreprocessProvider:IMacroProvider
     {
         public string ExecuteCommand(string CommandName, params string[] Parameters)
         {
