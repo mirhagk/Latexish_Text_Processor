@@ -8,7 +8,6 @@ namespace Latexish_Text_Processor.MacroProviders
 {
     public class CodeProvider : CommandProvider
     {
-        public CodeProvider(ParserEngine.Parser parser) : base(parser) { }
         [Macro(false)]
         public string If(string condition, string ifResult, string elseResult)
         {
@@ -20,7 +19,7 @@ namespace Latexish_Text_Processor.MacroProviders
         public string While(string condition, string body)
         {
             string result = "";
-            while (parser.Process(condition).Trim() == "1")
+            while (Parser.Process(condition).Trim() == "1")
             {
                 result += body;
             }
@@ -45,7 +44,7 @@ namespace Latexish_Text_Processor.MacroProviders
         [Macro]
         public string SetVarLazy(string varName, string value)
         {
-            varName = parser.Process(varName);
+            varName = Parser.Process(varName);
             return SetVar(varName, value);
         }
         [Macro(false)]

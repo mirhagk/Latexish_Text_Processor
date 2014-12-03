@@ -25,12 +25,11 @@ namespace Latexish_Text_Processor.MacroProviders
             public int NumParameters { get; set; }
             public Func<string[], string> Execute;
         }
-        public CommandProvider(Parser parser)
+        public CommandProvider()
         {
-            this.parser = parser;
             AddSystemMacros();
         }
-        protected Parser parser;
+        public Parser Parser { get; set; }
         private Func<string[], string> CreateWrapper(MethodInfo method)
         {
             return (arguments)=>
@@ -54,7 +53,7 @@ namespace Latexish_Text_Processor.MacroProviders
             {
                 for (int i = 0; i < Parameters.Length; i++)
                 {
-                    Parameters[i] = parser.Process(Parameters[i]);
+                    Parameters[i] = Parser.Process(Parameters[i]);
                 }
             }
             return macro.Execute(Parameters);

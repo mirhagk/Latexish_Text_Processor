@@ -12,5 +12,6 @@ namespace Latexish_Text_Processor.MacroProviders
         /// Attempt to execute this command and return the result. Returns null if it cannot find this command
         /// </summary>
         string ExecuteCommand(string CommandName, params string[] Parameters);
+        ParserEngine.Parser Parser { set; }
     }
 }

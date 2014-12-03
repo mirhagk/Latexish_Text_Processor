@@ -10,8 +10,7 @@ namespace Latexish_Text_Processor.MacroProviders
 {
     public class StandardProvider : CommandProvider
     {
-        public StandardProvider(ParserEngine.Parser parser)
-            : base(parser)
+        public StandardProvider()
         {
             AddEscapeMacros();
         }
@@ -51,7 +50,7 @@ namespace Latexish_Text_Processor.MacroProviders
             locationsToLook.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             locationsToLook.Add(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
             locationsToLook.Add(Environment.CurrentDirectory);
-            locationsToLook.Add(parser.ActiveFolder);
+            locationsToLook.Add(Parser.ActiveFolder);
             locationsToLook = locationsToLook.Where(l => l != null).ToList();
 
             locationsToLook.AddRange(locationsToLook.Select(l => Path.Combine(l, "lib")).ToList());
@@ -67,7 +66,7 @@ namespace Latexish_Text_Processor.MacroProviders
         [Macro]
         public string newCommand(string name, string numParameters, string lazyParsed, string text)
         {
-            lazyParsed = parser.Process(lazyParsed).Trim();
+            lazyParsed = Parser.Process(lazyParsed).Trim();
             int numParam = int.Parse(numParameters);
             macros.Add(new Macro()
             {

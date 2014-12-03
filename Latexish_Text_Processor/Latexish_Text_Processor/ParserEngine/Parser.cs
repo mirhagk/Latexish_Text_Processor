@@ -10,7 +10,7 @@ namespace Latexish_Text_Processor.ParserEngine
         public Parser()
         {
             MacroProviders = new List<IMacroProvider>();
-            MacroProviders.Add(new StandardProvider(this));
+            MacroProviders.Add(new StandardProvider());
         }
         public string FinalClear(string input)
         {
@@ -37,6 +37,10 @@ namespace Latexish_Text_Processor.ParserEngine
         }
         public string Process(string input, string[] includedFiles = null)
         {
+            foreach(var provider in MacroProviders)
+            {
+                provider.Parser = this;
+            }
             string result = "";
             includedFiles = includedFiles??new string[0];
             foreach(var includedFile in includedFiles)
