@@ -1,0 +1,14 @@
+﻿[[[Basic, generic html tag, helper function for this]]]
+\newCommand{htmlTag}{2}{<#1>#2</#1>}
+
+[[[Define the document structure]]]
+\newCommand{document}{1}{
+	\htmlTag{html}{
+		\htmlTag{head}{}
+		\htmlTag{body}{#1}}
+}
+
+\newCommand{p}{1}{\htmlTag{p}{#1}}
+\newCommand{heading}{1}{\htmlTag{h1}{#1}}
+\newCommand{subheading}{1}{\htmlTag{h2}{#1}}
+
