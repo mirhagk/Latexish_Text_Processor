@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnitTests.UnitTestHelpers;
+using static UnitTests.UnitTestHelpers;
 
 namespace UnitTests
 {

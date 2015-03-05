@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Latexish_Text_Processor.ParserEngine;
-using UnitTests.UnitTestHelpers;
+using static UnitTests.UnitTestHelpers;
 
 namespace UnitTests
 {
