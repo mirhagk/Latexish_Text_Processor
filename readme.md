@@ -3,6 +3,11 @@ Latexish Text Processor
 
 A text processor that allows latex-style macros.
 
+Latest
+[![Build status](https://ci.appveyor.com/api/projects/status/o402f8wxg31qraos?svg=true)
+![Test status](http://teststatusbadge.azurewebsites.net/api/status/mirhagk/latexish-text-processor)]
+(https://ci.appveyor.com/project/mirhagk/latexish-text-processor)
+
 Roadmap
 ---
 
