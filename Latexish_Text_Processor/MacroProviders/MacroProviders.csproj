@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Humanizer, Version=1.37.7.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Humanizer.1.37.7\lib\portable-win+net40+sl50+wp8+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Humanizer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeProvider.cs" />
+    <Compile Include="HumanizerProvider.cs" />
     <Compile Include="MathProvider.cs" />
     <Compile Include="PreprocessProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -49,6 +54,9 @@
       <Project>{f700cee2-cb56-45ed-b009-6cf49ffa0fdb}</Project>
       <Name>Latexish_Text_Processor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
