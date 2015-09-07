@@ -28,6 +28,9 @@ namespace Latexish_Text_Processor
                         case "math":
                             parser.MacroProviders.Add(new MathProvider { Parser = parser });
                             break;
+                        case "language":
+                            parser.MacroProviders.Add(new LanguageProvider(parser));
+                            break;
                     }
                 }
                 else if (args[i].StartsWith("-"))
