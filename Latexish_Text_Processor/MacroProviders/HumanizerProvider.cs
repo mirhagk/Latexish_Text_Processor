@@ -7,7 +7,7 @@ using Humanizer;
 
 namespace Latexish_Text_Processor.MacroProviders
 {
-    class LanguageProvider:CommandProvider
+    public class HumanizerProvider:CommandProvider
     {
         [Macro]
         public string Upper(string sentence)
