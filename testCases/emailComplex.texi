@@ -1,0 +1,4 @@
+[\define{CentreDisplay}{50}
+]
+
+Dear \CentreDisplay 
