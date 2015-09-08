@@ -13,10 +13,15 @@ namespace UnitTests
     [TestClass]
     public class HumanizerTests
     {
+        string ProcessWithHumanizer(string input)
+        {
+            return StandardProcess(input, false, new HumanizerProvider());
+        }
         [TestMethod]
         public void UpperCase()
         {
-            Assert.AreEqual("THIS IS UPPER CASE", StandardProcess(@"\system.Upper{This is upper case}", false, new HumanizerProvider()));
+            Assert.AreEqual("THIS IS UPPER CASE", 
+                ProcessWithHumanizer(@"\system.Upper{This is upper case}"));
         }
     }
 }
