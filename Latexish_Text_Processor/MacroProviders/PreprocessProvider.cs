@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Latexish_Text_Processor.ParserEngine;
+using MacroProviders.Interfaces;
 
 namespace Latexish_Text_Processor.MacroProviders
 {

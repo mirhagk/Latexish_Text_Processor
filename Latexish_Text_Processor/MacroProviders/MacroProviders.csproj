@@ -44,7 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeProvider.cs" />
+    <Compile Include="GeneratorProvider.cs" />
     <Compile Include="HumanizerProvider.cs" />
+    <Compile Include="Interfaces\IGeneratorSupport.cs" />
     <Compile Include="MathProvider.cs" />
     <Compile Include="PreprocessProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
