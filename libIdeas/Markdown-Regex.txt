@@ -1,0 +1,27 @@
+Italics
+\*([^\*]+)\*
+\emph{$1}
+
+Bold
+\*\*([^\*]+)\*\*
+\strong{$1}
+
+Lists
+(?m)^([\ \t]*)\d\.\W(.*)$
+\listitem{$2}{\length{$1}}
+
+Heading (these repeated)
+(?m)^#(.*)$
+\heading{$1}
+
+Heading-Alt
+(?m)^(#+)(.*)$
+\heading{$2}{\length{$1}}
+
+Code
+`([^`]*)`
+\code{$1}
+
+
+It could be defined like:
+\macro{\*([^\*]+)\*}{\emph{$1}}

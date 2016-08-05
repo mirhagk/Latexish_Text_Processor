@@ -46,6 +46,12 @@
   <ItemGroup>
     <Compile Include="CommandProvider.cs" />
     <Compile Include="IMacroProvider.cs" />
+    <Compile Include="MacroProviders\RunTimeCSharpProvider.cs" />
+    <Compile Include="MacroProviders\StandardProvider.cs" />
+    <Compile Include="MacroProviders\CodeProvider.cs" />
+    <Compile Include="MacroProviders\CommandProvider.cs" />
+    <Compile Include="MacroProviders\IMacroProvider.cs" />
+    <Compile Include="MacroProviders\MathProvider.cs" />
     <Compile Include="ParserEngine\Parser.cs" />
     <Compile Include="ParserEngine\Tokenizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
